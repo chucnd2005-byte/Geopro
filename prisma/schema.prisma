@@ -1,0 +1,197 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id           String     @id @default(cuid())
+  name         String
+  slug         String     @unique
+  description  String?
+  parentId     String?
+  icon         String?
+  image        String?
+  displayOrder Int        @default(0)
+  parent       Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children     Category[] @relation("CategoryHierarchy")
+  products     Product[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Brand {
+  id             String    @id @default(cuid())
+  name           String
+  slug           String    @unique
+  logo           String?
+  country        String
+  officialDealer Boolean   @default(true)
+  warrantyPolicy String?
+  products       Product[]
+  createdAt      DateTime  @default(now())
+}
+
+model Product {
+  id              String             @id @default(cuid())
+  slug            String             @unique
+  sku             String             @unique
+  name            String
+  brandId         String
+  brand           Brand              @relation(fields: [brandId], references: [id])
+  categoryId      String
+  category        Category           @relation(fields: [categoryId], references: [id])
+  basePrice       Float
+  salePrice       Float?
+  stock           Int                @default(10)
+  condition       String             @default("NEW_100") // NEW_100 | REFURBISHED_99
+  origin          String             // Thụy Sĩ, Nhật Bản, Trung Quốc, Mỹ
+  warrantyMonths  Int                @default(24)
+  isQuoteOnly     Boolean            @default(false)
+  isFeatured      Boolean            @default(false)
+  rating          Float              @default(5.0)
+  reviewCount     Int                @default(0)
+  mainImage       String
+  gallery         String             // JSON string array of URLs
+  shortDesc       String
+  fullDesc        String
+  highlights      String             // JSON string array of key spec bullet points
+  standardPackage String             // JSON string array of items in hard case
+  specs           ProductSpec?
+  variants        ProductVariant[]
+  downloads       TechnicalDownload[]
+  quoteItems      QuoteItem[]
+  orderItems      OrderItem[]
+  reviews         Review[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model ProductSpec {
+  id                   String   @id @default(cuid())
+  productId            String   @unique
+  product              Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  categoryType         String   // GNSS_RTK | TOTAL_STATION | OPTICAL_LEVEL | THEODOLITE | ACCESSORY
+  
+  // GNSS RTK Specs
+  channels             Int?     // 1408, 1598, 800
+  constellations       String?  // GPS, GLONASS, BDS, GALILEO, QZSS, NavIC
+  horizontalAccuracy   String?  // 8mm + 1ppm RMS
+  verticalAccuracy     String?  // 15mm + 1ppm RMS
+  tiltCompensation     String?  // IMU 60° bù nghiêng tự động
+  uhfPower             String?  // 1W/2W/4W phát xa 15km
+  batteryLifeHours     Float?   // 15 hours
+  weightKg             Float?   // 0.85 kg
+  ingressProtection    String?  // IP67, IP68
+  
+  // Total Station Specs
+  angularAccuracy      String?  // 1", 2", 5"
+  reflectorlessRange   String?  // 1000m, 2000m
+  prismRange           String?  // 5000m
+  edmSpeed             String?  // 0.3s
+  
+  // Optical Level Specs
+  magnification        String?  // 24x, 30x, 32x
+  stdDevPerKm          String?  // 0.7mm/km, 1.5mm/km, 2.0mm/km
+  
+  // Detailed full specs JSON
+  rawSpecs             String?  // Full JSON specification matrix
+}
+
+model ProductVariant {
+  id              String   @id @default(cuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku             String   @unique
+  name            String   // e.g. "Bộ Rover Đơn (Gồm sổ tay)", "Trọn Bộ Base + Rover + Radio ngoài 35W"
+  priceAdjustment Float    @default(0)
+  stock           Int      @default(5)
+  bundleIncludes  String?  // JSON string
+}
+
+model TechnicalDownload {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  title       String   // e.g. "Catalog Thông Số Kỹ Thuật (PDF)", "Giấy Chứng Nhận Hiệu Chuẩn Quatest 1", "Sổ Tay Hướng Dẫn Đo RTK Tiếng Việt"
+  docType     String   // CATALOG_PDF | CALIBRATION_CERT | USER_MANUAL | FIRMWARE
+  fileUrl     String
+  fileSize    String   // e.g. "4.8 MB"
+  createdAt   DateTime @default(now())
+}
+
+model QuoteRequest {
+  id              String      @id @default(cuid())
+  quoteCode       String      @unique // e.g. BG-2026-0889
+  companyName     String
+  taxId           String?
+  contactName     String
+  phone           String
+  email           String
+  projectLocation String?
+  projectScale    String?     // e.g. "Khảo sát tuyến đường cao tốc 45km", "Khảo sát trắc địa địa chính xã"
+  notes           String?
+  status          String      @default("PENDING") // PENDING | PROCESSED | SENT
+  items           QuoteItem[]
+  createdAt       DateTime    @default(now())
+}
+
+model QuoteItem {
+  id             String       @id @default(cuid())
+  quoteId        String
+  quote          QuoteRequest @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  productId      String
+  product        Product      @relation(fields: [productId], references: [id])
+  quantity       Int          @default(1)
+  requestedPrice Float?
+}
+
+model Order {
+  id                  String      @id @default(cuid())
+  orderCode           String      @unique // e.g. ORD-2026-9901
+  customerName        String
+  phone               String
+  email               String
+  address             String
+  city                String
+  note                String?
+  subtotal            Float
+  vatAmount           Float       @default(0)
+  totalAmount         Float
+  vatInvoiceRequested Boolean     @default(false)
+  companyTaxId        String?
+  companyName         String?
+  companyAddress      String?
+  paymentMethod       String      @default("BANK_TRANSFER") // BANK_TRANSFER | COD | ENTERPRISE_CREDIT
+  status              String      @default("CONFIRMED")
+  items               OrderItem[]
+  createdAt           DateTime    @default(now())
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  unitPrice Float
+  lineTotal Float
+}
+
+model Review {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  authorName    String
+  companyName   String?  // e.g. "Công ty CP Khảo sát & Xây dựng Miền Bắc"
+  rating        Int      @default(5)
+  title         String
+  comment       String
+  verifiedBuyer Boolean  @default(true)
+  helpfulCount  Int      @default(0)
+  createdAt     DateTime @default(now())
+}
