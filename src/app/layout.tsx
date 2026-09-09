@@ -8,6 +8,7 @@ import B2BQuoteModal from '@/components/quote/B2BQuoteModal';
 import CartDrawer from '@/components/cart/CartDrawer';
 import Toast from '@/components/notifications/Toast';
 import { OrganizationJsonLd } from '@/components/seo/JsonLd';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: {
@@ -61,6 +62,7 @@ export default function RootLayout({
         <B2BQuoteModal />
         <CartDrawer />
         <Toast />
+        <SpeedInsights />
       </body>
     </html>
   );
