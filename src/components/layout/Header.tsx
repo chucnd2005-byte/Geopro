@@ -302,13 +302,19 @@ export default function Header({ settings: propSettings }: HeaderProps) {
             })}
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="ml-auto flex items-center justify-end space-x-2">
             <Link
               href="/#advisor-section"
               className="px-3 py-2.5 text-survey-400 hover:text-white flex items-center gap-1.5 transition-colors bg-slate-800/60 rounded"
             >
               <Compass className="w-3.5 h-3.5 animate-spin-slow" />
               <span>Tư Vấn Chọn Máy Đo (AI Wizard)</span>
+            </Link>
+            <Link
+              href="/admin"
+              className="px-3 py-2.5 text-slate-200 hover:text-white hover:bg-survey-600 rounded transition-colors"
+            >
+              Admin
             </Link>
           </div>
         </div>
