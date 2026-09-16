@@ -9,25 +9,33 @@ async function main() {
 
   // 1. Seed Admin User
   const salt = await bcrypt.genSalt(10);
-  const passwordHash = await bcrypt.hash('GeoproAdmin@2026', salt);
+  const passwordHash = await bcrypt.hash('12345678Ab@', salt);
 
-  await prisma.adminUser.upsert({
-    where: { email: 'admin@geopro.vn' },
+  const adminUser = await prisma.adminUser.upsert({
+    where: { email: 'chucnd2005@gmail.com' },
     update: {
       passwordHash,
+      username: 'chucnd2005',
+      email: 'chucnd2005@gmail.com',
       name: 'Kỹ sư Quản trị Trắc địa (Admin)',
       role: 'ADMIN',
     },
     create: {
-      username: 'admin',
-      email: 'admin@geopro.vn',
+      username: 'chucnd2005',
+      email: 'chucnd2005@gmail.com',
       passwordHash,
       name: 'Kỹ sư Quản trị Trắc địa (Admin)',
       role: 'ADMIN',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
     },
   });
-  console.log('Seeded default admin user: admin@geopro.vn / GeoproAdmin@2026');
+  await prisma.adminUser.deleteMany({
+    where: {
+      email: 'admin@geopro.vn',
+      id: { not: adminUser.id },
+    },
+  });
+  console.log('Seeded default admin user: chucnd2005@gmail.com / 12345678Ab@');
 
   // 2. Seed Categories
   for (let i = 0; i < CATEGORIES.length; i++) {

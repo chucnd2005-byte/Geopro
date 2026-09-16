@@ -132,7 +132,7 @@ export default function AdminHeader({ user }: Props) {
               <div className="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-1.5 text-xs text-slate-300 z-50 animate-fade-in">
                 <div className="p-2 border-b border-slate-800">
                   <p className="font-bold text-white truncate">{user?.name || 'Admin'}</p>
-                  <p className="text-[10px] text-slate-500 truncate">{user?.email || 'admin@geopro.vn'}</p>
+                  <p className="text-[10px] text-slate-500 truncate">{user?.email || 'chucnd2005@gmail.com'}</p>
                 </div>
                 <Link
                   href="/admin/settings"

@@ -12,13 +12,13 @@ async function testE2E() {
 
   // 1. Verify Database records
   console.log('1. Checking Database Tables & Seed Data:');
-  const admin = await prisma.adminUser.findUnique({ where: { email: 'admin@geopro.vn' } });
+  const admin = await prisma.adminUser.findUnique({ where: { email: 'chucnd2005@gmail.com' } });
   if (!admin) throw new Error('Admin user not found in DB!');
   console.log(`   ✓ Admin User found: ${admin.name} (${admin.email}, Role: ${admin.role})`);
 
-  const passwordMatch = await bcrypt.compare('GeoproAdmin@2026', admin.passwordHash);
+  const passwordMatch = await bcrypt.compare('12345678Ab@', admin.passwordHash);
   if (!passwordMatch) throw new Error('Admin password hash mismatch!');
-  console.log(`   ✓ Password comparison for 'GeoproAdmin@2026': MATCHED`);
+  console.log(`   ✓ Password comparison for '12345678Ab@': MATCHED`);
 
   const productCount = await prisma.product.count();
   console.log(`   ✓ Total Products in Catalog: ${productCount}`);

@@ -20,8 +20,8 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('from') || '/admin/dashboard';
 
-  const [identifier, setIdentifier] = useState('admin@geopro.vn');
-  const [password, setPassword] = useState('GeoproAdmin@2026');
+  const [identifier, setIdentifier] = useState('chucnd2005@gmail.com');
+  const [password, setPassword] = useState('12345678Ab@');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -66,7 +66,7 @@ function LoginForm() {
             required
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
-            placeholder="admin@geopro.vn"
+            placeholder="chucnd2005@gmail.com"
             className="w-full pl-10 pr-4 py-2.5 bg-slate-950/80 border border-slate-700 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-survey-500 transition-colors"
           />
         </div>
@@ -138,8 +138,8 @@ export default function AdminLoginPage() {
             <span>Tài khoản quản trị mặc định (Môi trường Dev):</span>
           </div>
           <div className="text-[11px] font-mono text-slate-300 space-y-0.5 pl-5">
-            <div>Username: <strong className="text-survey-400">admin@geopro.vn</strong></div>
-            <div>Password: <strong className="text-survey-400">GeoproAdmin@2026</strong></div>
+            <div>Username: <strong className="text-survey-400">chucnd2005@gmail.com</strong></div>
+            <div>Password: <strong className="text-survey-400">12345678Ab@</strong></div>
           </div>
         </div>
 

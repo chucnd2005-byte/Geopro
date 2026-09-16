@@ -8,7 +8,7 @@ async function generateToken() {
   return await new SignJWT({
     userId: 'admin-seed-01',
     username: 'admin',
-    email: 'admin@geopro.vn',
+    email: 'chucnd2005@gmail.com',
     name: 'Tổng Quản Trị Hệ Thống',
     role: 'ADMIN',
   })
