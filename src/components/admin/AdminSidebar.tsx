@@ -15,6 +15,7 @@ import {
   ExternalLink,
   ChevronRight,
   ShieldAlert,
+  Settings,
 } from 'lucide-react';
 
 interface NavItem {
@@ -61,6 +62,7 @@ export default function AdminSidebar({ quoteCount = 2, orderCount = 1 }: Props) 
     {
       label: 'NỘI DUNG & CMS',
       items: [
+        { name: 'Cài Đặt Website', href: '/admin/settings', icon: Settings },
         { name: 'Thư Viện Media & PDF', href: '/admin/media', icon: Image },
         { name: 'Banner & Bài Viết SEO', href: '/admin/content', icon: FileText },
       ],

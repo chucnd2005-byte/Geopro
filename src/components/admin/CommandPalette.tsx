@@ -13,6 +13,7 @@ import {
   FileText,
   ExternalLink,
   X,
+  Settings,
 } from 'lucide-react';
 
 interface Props {
@@ -45,6 +46,7 @@ export default function CommandPalette({ isOpen, onClose }: Props) {
 
   const items = [
     { name: 'Bảng Điều Khiển Tổng Quan', href: '/admin/dashboard', icon: LayoutDashboard, category: 'Điều Hướng' },
+    { name: 'Cài Đặt Website, Header, Footer & Pháp Lý', href: '/admin/settings', icon: Settings, category: 'Cài Đặt' },
     { name: 'Danh Sách Thiết Bị & Sản Phẩm', href: '/admin/products', icon: Package, category: 'Sản Phẩm' },
     { name: 'Thêm Thiết Bị Đo Đạc Mới', href: '/admin/products/new', icon: PlusCircle, category: 'Sản Phẩm' },
     { name: 'Yêu Cầu Báo Giá Doanh Nghiệp (B2B)', href: '/admin/quotes', icon: FileSpreadsheet, category: 'Kinh Doanh' },

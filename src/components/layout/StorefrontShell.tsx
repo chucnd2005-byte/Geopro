@@ -9,8 +9,15 @@ import CompareModal from '@/components/compare/CompareModal';
 import B2BQuoteModal from '@/components/quote/B2BQuoteModal';
 import CartDrawer from '@/components/cart/CartDrawer';
 import Toast from '@/components/notifications/Toast';
+import { SiteSettingsData } from '@/lib/settings';
 
-export default function StorefrontShell({ children }: { children: React.ReactNode }) {
+export default function StorefrontShell({
+  children,
+  settings,
+}: {
+  children: React.ReactNode;
+  settings?: SiteSettingsData;
+}) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
 
@@ -20,9 +27,9 @@ export default function StorefrontShell({ children }: { children: React.ReactNod
 
   return (
     <>
-      <Header />
+      <Header settings={settings} />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <Footer settings={settings} />
 
       {/* Storefront Floating Trays & Modals */}
       <CompareDrawer />
@@ -33,3 +40,4 @@ export default function StorefrontShell({ children }: { children: React.ReactNod
     </>
   );
 }
+

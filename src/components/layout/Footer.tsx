@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Award,
   PhoneCall,
@@ -83,7 +84,7 @@ export default function Footer({ settings: propSettings }: FooterProps) {
       </div>
 
       {/* 2. Main Footer Body */}
-      <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 text-xs">
+      <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 text-xs">
         {/* Col 1: About & Legal Info (Span 2 cols) */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center gap-2">
@@ -119,13 +120,45 @@ export default function Footer({ settings: propSettings }: FooterProps) {
               <span>Email: <a href={`mailto:${settings.primaryEmail}`} className="text-white hover:text-survey-400">{settings.primaryEmail}</a></span>
             </div>
           </div>
+
+          {/* Trust Badges & Certifications */}
+          {settings.trustBadges && settings.trustBadges.length > 0 && (
+            <div className="pt-2">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-2">
+                Chứng Nhận & Kiểm Định
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                {settings.trustBadges.map((badge, bIdx) => (
+                  <div
+                    key={bIdx}
+                    className="bg-slate-900 border border-slate-800 rounded-lg p-1.5 flex items-center gap-2 hover:border-slate-700 transition-colors"
+                    title={badge.title}
+                  >
+                    {badge.imageUrl && (
+                      <div className="relative w-6 h-6 rounded overflow-hidden shrink-0 bg-white/5">
+                        <Image
+                          src={badge.imageUrl}
+                          alt={badge.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <span className="text-[10px] text-slate-300 font-medium truncate max-w-[130px]">
+                      {badge.title}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Col 2: Showroom & Service Centers */}
-        <div className="space-y-3">
+        <div className="lg:col-span-1 space-y-3">
           <h4 className="text-white font-bold text-sm uppercase tracking-wider text-survey-400 flex items-center gap-1.5">
             <MapPin className="w-4 h-4" />
-            <span>Hệ Thống Chi Nhánh</span>
+            <span>Showrooms</span>
           </h4>
           <div className="space-y-4 text-slate-400">
             {settings.showrooms.map((sr) => (
@@ -151,9 +184,9 @@ export default function Footer({ settings: propSettings }: FooterProps) {
           </div>
         </div>
 
-        {/* Col 3 & 4: Dynamic Customizable Link Columns */}
-        {settings.footerColumns.slice(0, 2).map((col, idx) => (
-          <div key={idx} className="space-y-3">
+        {/* Col 3, 4, 5: 3 Dynamic Customizable Link Columns */}
+        {settings.footerColumns.slice(0, 3).map((col, idx) => (
+          <div key={idx} className="lg:col-span-1 space-y-3">
             <h4 className="text-white font-bold text-sm uppercase tracking-wider text-survey-400">
               {col.title}
             </h4>
@@ -172,6 +205,7 @@ export default function Footer({ settings: propSettings }: FooterProps) {
           </div>
         ))}
       </div>
+
 
       {/* 3. Bottom Social & Copyright */}
       <div className="border-t border-slate-900 bg-black py-5 px-4 text-slate-500 text-[11px]">

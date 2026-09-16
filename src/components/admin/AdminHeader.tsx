@@ -13,6 +13,7 @@ import {
   ChevronRight,
   ExternalLink,
   Menu,
+  Settings,
 } from 'lucide-react';
 import CommandPalette from './CommandPalette';
 
@@ -53,6 +54,8 @@ export default function AdminHeader({ user }: Props) {
       crumbs.push({ name: 'Thư viện Media', href: '/admin/media' });
     } else if (parts.includes('content')) {
       crumbs.push({ name: 'Nội dung & SEO', href: '/admin/content' });
+    } else if (parts.includes('settings')) {
+      crumbs.push({ name: 'Cài Đặt Website', href: '/admin/settings' });
     } else if (parts.includes('dashboard')) {
       crumbs.push({ name: 'Dashboard', href: '/admin/dashboard' });
     }
@@ -131,6 +134,14 @@ export default function AdminHeader({ user }: Props) {
                   <p className="font-bold text-white truncate">{user?.name || 'Admin'}</p>
                   <p className="text-[10px] text-slate-500 truncate">{user?.email || 'admin@geopro.vn'}</p>
                 </div>
+                <Link
+                  href="/admin/settings"
+                  onClick={() => setIsUserMenuOpen(false)}
+                  className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white"
+                >
+                  <Settings className="w-3.5 h-3.5 text-survey-400" />
+                  <span>Cài Đặt Website</span>
+                </Link>
                 <Link
                   href="/"
                   target="_blank"
