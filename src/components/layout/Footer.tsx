@@ -1,7 +1,8 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import {
-  ShieldCheck,
   Award,
   PhoneCall,
   Mail,
@@ -11,12 +12,24 @@ import {
   CheckCircle,
   Truck,
   RotateCcw,
+  ExternalLink,
+  ShieldCheck,
+  Building,
 } from 'lucide-react';
+import { useSiteSettings } from '@/lib/SettingsContext';
+import { SiteSettingsData } from '@/lib/settings';
 
-export default function Footer() {
+interface FooterProps {
+  settings?: SiteSettingsData;
+}
+
+export default function Footer({ settings: propSettings }: FooterProps) {
+  const contextSettings = useSiteSettings();
+  const settings = propSettings || contextSettings;
+
   return (
     <footer className="bg-slate-950 text-slate-300 border-t border-slate-800">
-      {/* 4 Core Guarantees Bar */}
+      {/* 1. Core Guarantees Bar */}
       <div className="border-b border-slate-800/80 bg-slate-900/60 py-8 px-4">
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="flex items-start gap-3.5">
@@ -26,7 +39,7 @@ export default function Footer() {
             <div>
               <h4 className="text-white font-bold text-sm">100% Chính Hãng</h4>
               <p className="text-xs text-slate-400 mt-0.5">
-                Nhập khẩu ủy quyền Leica, Trimble, Topcon, CHCNAV đầy đủ CO/CQ.
+                Đại lý ủy quyền chính thức Leica, Trimble, CHCNAV, Topcon. Đầy đủ CO/CQ.
               </p>
             </div>
           </div>
@@ -36,9 +49,9 @@ export default function Footer() {
               <FileCheck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-white font-bold text-sm">Kiểm Định Quatest 1</h4>
+              <h4 className="text-white font-bold text-sm">Kiểm Định Vilas 110</h4>
               <p className="text-xs text-slate-400 mt-0.5">
-                Cấp tem & giấy hiệu chuẩn kiểm định có giá trị pháp lý nghiệm thu dự án.
+                Phòng hiệu chuẩn đo lường cấp tem & giấy chứng nhận có giá trị pháp lý nghiệm thu.
               </p>
             </div>
           </div>
@@ -48,9 +61,9 @@ export default function Footer() {
               <RotateCcw className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-white font-bold text-sm">Cho Mượn Máy Dự Phòng</h4>
+              <h4 className="text-white font-bold text-sm">Cấp Máy Dự Phòng</h4>
               <p className="text-xs text-slate-400 mt-0.5">
-                Không gián đoạn công trình: cấp máy đo thay thế trong thời gian bảo hành.
+                Không gián đoạn công trình: cung cấp máy đo thay thế trong thời gian bảo dưỡng.
               </p>
             </div>
           </div>
@@ -62,138 +75,153 @@ export default function Footer() {
             <div>
               <h4 className="text-white font-bold text-sm">Đo Thử Tại Công Trình</h4>
               <p className="text-xs text-slate-400 mt-0.5">
-                Kỹ sư mang máy đến tận thực địa đo thử, hướng dẫn chuyển giao kỹ thuật.
+                Kỹ sư mang máy đến tận thực địa đo thử, bàn giao công nghệ trên 63 tỉnh thành.
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Footer Info */}
+      {/* 2. Main Footer Body */}
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 text-xs">
-        {/* Col 1: About & Headquarters */}
+        {/* Col 1: About & Legal Info (Span 2 cols) */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-survey-600 flex items-center justify-center text-white font-black text-sm">
+            <div className="w-8 h-8 rounded bg-survey-600 flex items-center justify-center text-white font-black text-sm shadow-md shadow-survey-600/30">
               GS
             </div>
             <span className="text-lg font-black tracking-wider text-white">
-              GEOSURVEY <span className="text-survey-500">PRO</span>
+              {settings.siteName}
             </span>
           </div>
+
           <p className="text-slate-400 leading-relaxed">
-            Hệ thống phân phối thiết bị trắc địa, máy định vị vệ tinh GNSS RTK, máy toàn đạc điện tử và dịch vụ kiểm định hiệu chuẩn đo lường hàng đầu Việt Nam. Đối tác tin cậy của hơn 1.200 nhà thầu, viện khảo sát quy hoạch và công ty tư vấn địa chính.
+            {settings.aboutText}
           </p>
 
-          <div className="space-y-2 pt-2 text-slate-300">
+          <div className="p-3.5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1.5 text-[11px] text-slate-400">
+            <div className="font-bold text-slate-200">{settings.legalBusinessName}</div>
+            <div>Mã số thuế: <strong className="text-survey-400 font-mono">{settings.taxCode}</strong></div>
+            <div>{settings.businessLicense}</div>
+          </div>
+
+          <div className="space-y-2 pt-1 text-slate-300">
             <div className="flex items-center gap-2">
               <PhoneCall className="w-4 h-4 text-survey-400 shrink-0" />
-              <span>Tư vấn kỹ thuật 24/7: <strong className="text-white">0988.355.688</strong></span>
+              <span>Hotline kỹ thuật 24/7: <a href={`tel:${settings.technicalSupportHotline}`} className="text-white font-bold hover:text-survey-400">{settings.technicalSupportHotline}</a></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <PhoneCall className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Hotline báo giá dự án: <a href={`tel:${settings.salesHotline}`} className="text-white font-bold hover:text-survey-400">{settings.salesHotline}</a></span>
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-survey-400 shrink-0" />
-              <span>Email báo giá dự án: <strong className="text-white">duan@geosurvey.vn</strong></span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-survey-400 shrink-0" />
-              <span>Thời gian làm việc: 07:30 - 18:30 (Thứ 2 - Thứ 7, Hỗ trợ kỹ thuật thực địa 24/7)</span>
+              <span>Email: <a href={`mailto:${settings.primaryEmail}`} className="text-white hover:text-survey-400">{settings.primaryEmail}</a></span>
             </div>
           </div>
         </div>
 
-        {/* Col 2: Service Centers */}
+        {/* Col 2: Showroom & Service Centers */}
         <div className="space-y-3">
-          <h4 className="text-white font-bold text-sm uppercase tracking-wider text-survey-400">
-            Hệ Thống Chi Nhánh
+          <h4 className="text-white font-bold text-sm uppercase tracking-wider text-survey-400 flex items-center gap-1.5">
+            <MapPin className="w-4 h-4" />
+            <span>Hệ Thống Chi Nhánh</span>
           </h4>
-          <div className="space-y-3 text-slate-400">
-            <div>
-              <strong className="text-slate-200 block">Hà Nội (Trụ sở & TT Kiểm định):</strong>
-              <span className="text-[11px]">Tòa Hateco Apollo, Đ. Xuân Phương, Q. Nam Từ Liêm, TP. Hà Nội</span>
-            </div>
-            <div>
-              <strong className="text-slate-200 block">Đà Nẵng (Văn phòng Miền Trung):</strong>
-              <span className="text-[11px]">Số 268 Nguyễn Tri Phương, Q. Hải Châu, TP. Đà Nẵng</span>
-            </div>
-            <div>
-              <strong className="text-slate-200 block">TP. Hồ Chí Minh (Kho & Showroom):</strong>
-              <span className="text-[11px]">Số 120 Đường số 7, KDC Cityland, P. 7, Q. Gò Vấp, TP. HCM</span>
-            </div>
+          <div className="space-y-4 text-slate-400">
+            {settings.showrooms.map((sr) => (
+              <div key={sr.id} className="space-y-0.5 border-b border-slate-850 pb-2.5 last:border-0 last:pb-0">
+                <strong className="text-slate-200 block text-xs font-semibold">{sr.branchName}:</strong>
+                <span className="text-[11px] text-slate-400 block leading-relaxed">{sr.address}</span>
+                <div className="flex items-center justify-between text-[11px] pt-1">
+                  <span className="text-survey-400 font-mono font-medium">Hotline: {sr.phone}</span>
+                  {sr.googleMapsUrl && (
+                    <a
+                      href={sr.googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-slate-400 hover:text-white flex items-center gap-0.5"
+                    >
+                      <span>Bản đồ</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Col 3: Categories */}
-        <div className="space-y-3">
-          <h4 className="text-white font-bold text-sm uppercase tracking-wider text-survey-400">
-            Danh Mục Thiết Bị
-          </h4>
-          <ul className="space-y-2 text-slate-400">
-            <li>
-              <Link href="/products?category=may-dinh-vi-gnss-rtk" className="hover:text-white transition-colors">
-                Máy Định Vị GNSS RTK
-              </Link>
-            </li>
-            <li>
-              <Link href="/products?category=may-toan-dac-dien-tu" className="hover:text-white transition-colors">
-                Máy Toàn Đạc Điện Tử
-              </Link>
-            </li>
-            <li>
-              <Link href="/products?category=may-thuy-binh-tu-dong" className="hover:text-white transition-colors">
-                Máy Thủy Bình Tự Động
-              </Link>
-            </li>
-            <li>
-              <Link href="/products?category=phu-kien-trac-dia" className="hover:text-white transition-colors">
-                Gương Đơn & Sào Gương Carbon
-              </Link>
-            </li>
-            <li>
-              <Link href="/products?category=phu-kien-trac-dia" className="hover:text-white transition-colors">
-                Chân Máy Hợp Kim & Pin Dự Phòng
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Col 4: Dịch Vụ & Pháp Lý */}
-        <div className="space-y-3">
-          <h4 className="text-white font-bold text-sm uppercase tracking-wider text-survey-400">
-            Dịch Vụ Kỹ Thuật
-          </h4>
-          <ul className="space-y-2 text-slate-400">
-            <li className="flex items-center gap-1.5">
-              <CheckCircle className="w-3 h-3 text-emerald-400" />
-              <span>Hiệu chuẩn kiểm định máy trắc địa</span>
-            </li>
-            <li className="flex items-center gap-1.5">
-              <CheckCircle className="w-3 h-3 text-emerald-400" />
-              <span>Cho thuê máy RTK & Toàn đạc</span>
-            </li>
-            <li className="flex items-center gap-1.5">
-              <CheckCircle className="w-3 h-3 text-emerald-400" />
-              <span>Sửa chữa bảo dưỡng thiết bị đo</span>
-            </li>
-            <li className="flex items-center gap-1.5">
-              <CheckCircle className="w-3 h-3 text-emerald-400" />
-              <span>Chuyển giao công nghệ bay chụp UAV</span>
-            </li>
-            <li className="flex items-center gap-1.5">
-              <CheckCircle className="w-3 h-3 text-emerald-400" />
-              <span>Cài đặt trạm CORS Cục Đo Đạc</span>
-            </li>
-          </ul>
-        </div>
+        {/* Col 3 & 4: Dynamic Customizable Link Columns */}
+        {settings.footerColumns.slice(0, 2).map((col, idx) => (
+          <div key={idx} className="space-y-3">
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider text-survey-400">
+              {col.title}
+            </h4>
+            <ul className="space-y-2 text-slate-400">
+              {col.links.map((lnk, lIdx) => (
+                <li key={lIdx}>
+                  <Link
+                    href={lnk.url}
+                    className="hover:text-white hover:translate-x-0.5 transition-all inline-block"
+                  >
+                    {lnk.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
 
-      {/* Bottom Copyright */}
-      <div className="border-t border-slate-900 bg-black py-4 px-4 text-center text-slate-500 text-[11px]">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>© 2026 GeoSurvey Pro. Giấy phép hoạt động đo đạc bản đồ số 082/GP-BDĐ. Bản quyền thuộc về GeoSurvey Pro.</span>
-          <div className="flex items-center gap-4">
-            <Link href="/quote" className="text-slate-400 hover:text-white">Báo Giá VAT</Link>
-            <Link href="/products" className="text-slate-400 hover:text-white">Sản Phẩm</Link>
-            <span>Phòng Đo Lường Chuẩn ISO/IEC 17025</span>
+      {/* 3. Bottom Social & Copyright */}
+      <div className="border-t border-slate-900 bg-black py-5 px-4 text-slate-500 text-[11px]">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-center md:text-left leading-relaxed">
+            {settings.copyrightText}
+          </p>
+
+          {/* Social Links */}
+          <div className="flex items-center gap-3 shrink-0">
+            {settings.socialFacebook && (
+              <a
+                href={settings.socialFacebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-semibold transition-colors"
+              >
+                Facebook
+              </a>
+            )}
+            {settings.socialZalo && (
+              <a
+                href={settings.socialZalo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-semibold transition-colors"
+              >
+                Zalo OA
+              </a>
+            )}
+            {settings.socialYoutube && (
+              <a
+                href={settings.socialYoutube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-semibold transition-colors"
+              >
+                YouTube
+              </a>
+            )}
+            {settings.socialLinkedin && (
+              <a
+                href={settings.socialLinkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-semibold transition-colors"
+              >
+                LinkedIn
+              </a>
+            )}
           </div>
         </div>
       </div>

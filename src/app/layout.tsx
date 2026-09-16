@@ -1,12 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import CompareDrawer from '@/components/compare/CompareDrawer';
-import CompareModal from '@/components/compare/CompareModal';
-import B2BQuoteModal from '@/components/quote/B2BQuoteModal';
-import CartDrawer from '@/components/cart/CartDrawer';
-import Toast from '@/components/notifications/Toast';
+import StorefrontShell from '@/components/layout/StorefrontShell';
 import { OrganizationJsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
@@ -51,16 +45,7 @@ export default function RootLayout({
         <OrganizationJsonLd />
       </head>
       <body className="min-h-screen flex flex-col antialiased selection:bg-survey-600 selection:text-white">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-
-        {/* Global Floating Modals & Drawers */}
-        <CompareDrawer />
-        <CompareModal />
-        <B2BQuoteModal />
-        <CartDrawer />
-        <Toast />
+        <StorefrontShell>{children}</StorefrontShell>
       </body>
     </html>
   );

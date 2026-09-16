@@ -18,15 +18,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) {
     return {
       title: 'Không Tìm Thấy Thiết Bị | GeoSurvey Pro',
+      description: 'Thiết bị trắc địa bạn đang tìm kiếm không tồn tại hoặc đã được chuyển sang danh mục khác.',
     };
   }
+
+  const productUrl = `https://geosurvey.vn/products/${product.slug}`;
 
   return {
     title: `${product.name} | GeoSurvey Pro`,
     description: product.shortDesc,
+    alternates: {
+      canonical: productUrl,
+    },
     openGraph: {
       title: `${product.name} - Thiết Bị Đo Đạc Chính Hãng`,
       description: product.shortDesc,
+      url: productUrl,
+      siteName: 'GeoSurvey Pro - Chuyên Gia Thiết Bị Trắc Địa',
+      locale: 'vi_VN',
+      type: 'website',
       images: [
         {
           url: product.mainImage,
@@ -35,6 +45,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           alt: product.name,
         },
       ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.name} | GeoSurvey Pro`,
+      description: product.shortDesc,
+      images: [product.mainImage],
     },
   };
 }

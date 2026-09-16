@@ -26,14 +26,14 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isComparing = compareList.some((p) => p.id === product.id);
 
   return (
-    <div className="group bg-white rounded-xl border border-slate-200 hover:border-survey-500/50 hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden relative">
+    <div className="group bg-white rounded-xl border border-slate-200 hover:border-survey-500/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden relative">
       {/* Top badges */}
-      <div className="absolute top-2.5 left-2.5 z-10 flex flex-wrap gap-1.5">
-        <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-slate-900 text-white tracking-wider">
+      <div className="absolute top-2.5 left-2.5 z-10 flex flex-wrap gap-1.5 pointer-events-none">
+        <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-slate-900 text-white tracking-wider shadow-sm">
           {product.condition === 'NEW_100' ? 'Mới 100%' : 'Like New 99%'}
         </span>
         {product.isFeatured && (
-          <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-survey-600 text-white tracking-wider flex items-center gap-1">
+          <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-survey-600 text-white tracking-wider flex items-center gap-1 shadow-sm">
             <Zap className="w-2.5 h-2.5" /> Bán Chạy
           </span>
         )}
@@ -42,11 +42,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Compare Checkbox Icon Button */}
       <button
         type="button"
+        aria-label={`Thêm thiết bị ${product.name} vào bảng so sánh`}
         onClick={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           addToCompare(product);
         }}
-        className={`absolute top-2.5 right-2.5 z-10 p-1.5 rounded-lg border text-xs transition-all flex items-center gap-1 shadow-sm ${
+        className={`absolute top-2.5 right-2.5 z-10 p-1.5 rounded-lg border text-xs transition-all flex items-center gap-1 shadow-sm focus-visible:ring-2 focus-visible:ring-survey-500 focus-visible:outline-none ${
           isComparing
             ? 'bg-survey-600 border-survey-600 text-white'
             : 'bg-white/90 backdrop-blur-sm border-slate-200 text-slate-600 hover:border-survey-500 hover:text-survey-600'
@@ -57,17 +59,22 @@ export default function ProductCard({ product }: ProductCardProps) {
         <span className="text-[10px] font-bold pr-0.5">{isComparing ? 'Đã ghim' : 'So sánh'}</span>
       </button>
 
-      {/* Product Image */}
-      <Link href={`/products/${product.slug}`} className="block relative aspect-[4/3] bg-slate-50 overflow-hidden">
+      {/* Product Image Thumbnail with Prefetch Link */}
+      <Link
+        href={`/products/${product.slug}`}
+        prefetch={true}
+        aria-label={`Xem thông số chi tiết thiết bị ${product.name}`}
+        className="block relative aspect-[4/3] bg-slate-50 overflow-hidden focus-visible:ring-2 focus-visible:ring-survey-500 focus-visible:outline-none"
+      >
         <Image
           src={product.mainImage}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
+          className="object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </Link>
 
       {/* Body Content */}
@@ -78,10 +85,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span>{product.origin}</span>
         </div>
 
-        {/* Title */}
+        {/* Title with Prefetch Link */}
         <Link
           href={`/products/${product.slug}`}
-          className="font-bold text-slate-900 group-hover:text-survey-600 transition-colors line-clamp-2 text-sm leading-snug mb-2"
+          prefetch={true}
+          aria-label={product.name}
+          className="font-bold text-slate-900 group-hover:text-survey-600 transition-colors line-clamp-2 text-sm leading-snug mb-2 focus-visible:ring-2 focus-visible:ring-survey-500 focus-visible:outline-none rounded"
           title={product.name}
         >
           {product.name}

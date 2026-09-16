@@ -7,6 +7,60 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("ADMIN") // ADMIN | STAFF
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  url          String
+  mimeType     String
+  size         Int
+  folder       String   @default("products") // products | banners | catalogs | articles
+  altText      String?
+  createdAt    DateTime @default(now())
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  category    String   // Kỹ thuật RTK | Kinh nghiệm thực địa | Đánh giá thiết bị
+  coverImage  String
+  excerpt     String
+  content     String
+  author      String   @default("Kỹ sư GeoSurvey Pro")
+  tags        String   // JSON array string
+  isPublished Boolean  @default(true)
+  seoTitle    String?
+  seoDesc     String?
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Banner {
+  id           String   @id @default(cuid())
+  title        String
+  subtitle     String?
+  imageUrl     String
+  targetUrl    String   @default("/products")
+  badge        String?
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
 model Category {
   id           String     @id @default(cuid())
   name         String
@@ -134,9 +188,10 @@ model QuoteRequest {
   projectLocation String?
   projectScale    String?     // e.g. "Khảo sát tuyến đường cao tốc 45km", "Khảo sát trắc địa địa chính xã"
   notes           String?
-  status          String      @default("PENDING") // PENDING | PROCESSED | SENT
+  status          String      @default("PENDING") // PENDING | CONTACTED | QUOTED | WON | LOST
   items           QuoteItem[]
   createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @default(now()) @updatedAt
 }
 
 model QuoteItem {
@@ -166,9 +221,10 @@ model Order {
   companyName         String?
   companyAddress      String?
   paymentMethod       String      @default("BANK_TRANSFER") // BANK_TRANSFER | COD | ENTERPRISE_CREDIT
-  status              String      @default("CONFIRMED")
+  status              String      @default("PENDING") // PENDING | PROCESSING | CALIBRATING | SHIPPED | COMPLETED | CANCELLED
   items               OrderItem[]
   createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @default(now()) @updatedAt
 }
 
 model OrderItem {
@@ -195,3 +251,52 @@ model Review {
   helpfulCount  Int      @default(0)
   createdAt     DateTime @default(now())
 }
+
+model SiteSettings {
+  id                      String   @id @default("default_settings")
+  // General Info
+  siteName                String   @default("GeoSurvey Pro")
+  slogan                  String   @default("Thiết Bị Trắc Địa & Đo Đạc Chính Hãng")
+  metaDescription         String   @default("Hệ thống phân phối máy định vị GNSS RTK, máy toàn đạc điện tử, máy thủy bình tự động và phụ kiện trắc địa chính hãng tại Việt Nam.")
+  lightLogoUrl            String?
+  darkLogoUrl             String?
+  faviconUrl              String?
+
+  // Top Announcement Bar
+  announcementActive      Boolean  @default(true)
+  announcementMessage     String   @default("Miễn phí hiệu chuẩn & kiểm định thiết bị trắc địa toàn quốc (Trung tâm Vilas 110)")
+  announcementButtonText  String?  @default("Đăng Ký Kiểm Định")
+  announcementButtonUrl   String?  @default("/quote")
+
+  // Header Navigation & CTA
+  headerMenuJson          String   @default("[]") // Array of { id, label, url, is_dropdown, sub_items: [{ label, url }] }
+  hotlineLabel            String   @default("Hotline Kỹ Thuật 24/7")
+  hotlineNumber           String   @default("0988.355.688")
+  quoteButtonText         String   @default("Nhận Báo Giá Dự Án")
+  quoteButtonUrl          String   @default("/quote")
+
+  // Company Legal & Contact Details
+  legalBusinessName       String   @default("CÔNG TY CỔ PHẦN CÔNG NGHỆ TRẮC ĐỊA GEOPRO VIỆT NAM")
+  taxCode                 String   @default("0109887766")
+  businessLicense         String   @default("GPĐKKD số 0109887766 do Sở KH&ĐT TP.Hà Nội cấp ngày 15/03/2018")
+  primaryEmail            String   @default("contact@geopro.vn")
+  salesHotline            String   @default("0988.355.688")
+  technicalSupportHotline String   @default("1900 8299")
+  zaloNumber              String   @default("0988.355.688")
+
+  // Showrooms List (JSON array string)
+  showroomsJson           String   @default("[]") // Array of { id, branch_name, address, phone, google_maps_url }
+
+  // Footer Configuration
+  aboutText               String   @default("GeoSurvey Pro là đơn vị tiên phong cung cấp giải pháp đo đạc địa chính, trắc địa công trình và định vị vệ tinh độ chính xác cao hàng đầu Việt Nam. Đại lý ủy quyền chính thức của Leica Geosystems, Trimble, CHCNAV, Topcon.")
+  footerColumnsJson       String   @default("[]") // 3 link columns: [{ title, links: [{ label, url }] }]
+  trustBadgesJson         String   @default("[]") // Array of badge URLs or objects { title, imageUrl, linkUrl }
+  socialFacebook          String?  @default("https://facebook.com/geopro.survey")
+  socialZalo              String?  @default("https://zalo.me/0988355688")
+  socialYoutube           String?  @default("https://youtube.com/@geoprosurvey")
+  socialLinkedin          String?
+  copyrightText           String   @default("© 2026 GEOPRO VIETNAM JSC. Tất cả quyền được bảo lưu. Giấy phép xuất bản thông tin số 24/GP-TTĐT.")
+
+  updatedAt               DateTime @default(now()) @updatedAt
+}
+
